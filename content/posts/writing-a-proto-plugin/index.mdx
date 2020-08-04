@@ -1,0 +1,150 @@
+---
+title: "Writing a protoc plugin with google.golang.org/protobuf"
+date: 2020-03-08
+slug: "/writing-a-proto-plugin"
+---
+
+On the March 2nd 2020, a major new release of the Go API for protocol buffers was released that, amongst other things, introduced a much easier API for extending the compiler. In this series of posts, I’ll walk you through how to build your own compiler plugins for generating Go code.
+
+## Getting started
+Grab the latest version of Go (at time of writing 1.14) and ensure `GOPATH/bin` is on your path:
+
+```shell
+export PATH=$PATH:/usr/local/go/bin
+```
+
+In a fresh directory, initialise a project with Go modules and the Protobuf library:
+
+```shell
+go mod init github.com/[YOUR-ORG]/protoc-gen-foo
+go get google.golang.org/protobuf@v1.21.0
+```
+N.B. The name of the module is important here. Your compiler name must be prefixed with protoc-gen- e.g. proto-gen-foo
+
+# The Plan
+In this example, we want to extend the Protobuf compiler to add a method Foo() that returns bar for every message defined in our .proto file. Add the following to a new file test.proto as we’ll use this to verify our plugin works:
+
+```golang
+syntax = "proto3";
+
+package test;
+
+option go_package = ".;test";
+
+message Message {
+  string data = 1;
+}
+```
+
+## Invoking the compiler plugin
+To start we’ll write a useless plugin that writes to stdout. Add the following to main.go : package main
+
+```golang
+import (
+    "log"
+)
+
+
+func main()  {
+    log.Println("hello protoc")
+    return
+}
+```
+To invoke our plugin with protoc, run the following:
+
+```shell
+# Make a directory for our generated code
+mkdir out
+
+# Install our plugin to $GOPATH/bin
+go install .
+
+# Run protoc passing --foo_out as a flag
+protoc \
+    --proto_path . \
+    -I=. \
+    test.proto \
+    --foo_out=./out \
+    --go_out=./out
+N.B. protoc searches and invokes our plugin using the flag name foo_out
+
+If the above commands are successful, you should observe hello protoc being printed to the console and a generated protobuf file out/test.pb.go
+```
+## Generating Code
+Replace our barebones plugin with the following code, paying attention to the explanation in comments: package main
+
+```golang
+import (
+    "bytes"
+    "fmt"
+    "google.golang.org/protobuf/compiler/protogen"
+    "google.golang.org/protobuf/proto"
+    "google.golang.org/protobuf/types/pluginpb"
+    "io/ioutil"
+    "os"
+)
+
+func main()  {
+    // Protoc passes pluginpb.CodeGeneratorRequest in via stdin
+    // marshalled with Protobuf
+    input, _ := ioutil.ReadAll(os.Stdin)
+    var req pluginpb.CodeGeneratorRequest
+    proto.Unmarshal(input, &req)
+
+    // Initialise our plugin with default options
+    opts := protogen.Options{}
+    plugin, err := opts.New(&req)
+    if err != nil {
+        panic(err)
+    }
+
+    // Protoc passes a slice of File structs for us to process
+    for _, file := range plugin.Files {
+
+        // Time to generate code...!
+
+        // 1. Initialise a buffer to hold the generated code
+        var buf bytes.Buffer
+
+        // 2. Write the package name
+        pkg := fmt.Sprintf("package %s", file.GoPackageName)
+        buf.Write([]byte(pkg))
+
+        // 3. For each message add our Bar() method
+        for _, msg := range file.Proto.MessageType {
+           buf.Write([]byte(fmt.Sprintf(`
+              func (x %s) Foo() string {
+                 return "bar"
+              }`, *msg.Name)))
+        }
+
+        // 4. Specify the output filename, in this case test.foo.go
+        filename := file.GeneratedFilenamePrefix + ".foo.go"
+        file := plugin.NewGeneratedFile(filename, ".")
+
+        // 5. Pass the data from our buffer to the plugin file struct
+        file.Write(buf.Bytes())
+    }
+
+    // Generate a response from our plugin and marshall as protobuf
+    stdout := plugin.Response()
+    out, err := proto.Marshal(stdout)
+    if err != nil {
+        panic(err)
+    }
+
+    // Write the response to stdout, to be picked up by protoc
+    fmt.Fprintf(os.Stdout, string(out))
+}
+```
+Re-run the commands from the previous section to run the compiler and observe a new generated file out/test.foo.go Peeking inside the file, you’ll find the following:
+
+```golang
+package test
+
+func (x Message) Foo() string {
+    return "bar"
+}
+```
+Hooray! We’ve successfully added a method to our Protobuf message using our protoc compiler plugin. In the next installation to this series, we’ll used advanced Protobuf options to use parameterise our generated code. Stay tuned!
+
