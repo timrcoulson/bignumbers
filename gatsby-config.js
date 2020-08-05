@@ -6,7 +6,31 @@ const shouldAnalyseBundle = process.env.ANALYSE_BUNDLE
 
 module.exports = {
   siteMetadata: {
-    siteTitleAlt: `Minimal Blog - Gatsby Theme`,
+    siteTitle: `Big Numbers`,
+    siteTitleAlt: `Big Numbers`,
+    siteHeadline: `Big Numbers`,
+    siteUrl: `https://bignumbers.io`,
+    siteDescription: `Personal blog for Tim Coulson`,
+    siteLanguage: `en`,
+    siteImage: `/banner.png`,
+    author: `@timrcoulson`,
+    externalLinks: [
+      {
+        name: `Github`,
+        url: `https://github.com/timrcoulson`,
+      },
+      {
+        name: `Twitter`,
+        url: `https://twitter.com/timrcoulson`,
+      },
+    ],
+    // Navigation links
+    navigation: [
+      {
+        title: `Blog`,
+        slug: `/blog`,
+      },
+    ],
   },
   plugins: [
     {
@@ -26,11 +50,11 @@ module.exports = {
         externalLinks: [
           {
             name: `Twitter`,
-            url: `https://twitter.com/lekoarts_de`,
+            url: `https://twitter.com/timrcoulson`,
           },
           {
-            name: `Instagram`,
-            url: `https://www.instagram.com/lekoarts.de/`,
+            name: `Github`,
+            url: `https://www.github.com/timrcoulson/`,
           },
         ],
       },

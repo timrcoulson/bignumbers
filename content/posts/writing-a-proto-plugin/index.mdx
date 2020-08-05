@@ -24,7 +24,7 @@ N.B. The name of the module is important here. Your compiler name must be prefix
 # The Plan
 In this example, we want to extend the Protobuf compiler to add a method Foo() that returns bar for every message defined in our .proto file. Add the following to a new file test.proto as we’ll use this to verify our plugin works:
 
-```golang
+```go
 syntax = "proto3";
 
 package test;
@@ -39,7 +39,7 @@ message Message {
 ## Invoking the compiler plugin
 To start we’ll write a useless plugin that writes to stdout. Add the following to main.go : package main
 
-```golang
+```go
 import (
     "log"
 )
@@ -73,7 +73,7 @@ If the above commands are successful, you should observe hello protoc being prin
 ## Generating Code
 Replace our barebones plugin with the following code, paying attention to the explanation in comments: package main
 
-```golang
+```go
 import (
     "bytes"
     "fmt"
@@ -139,7 +139,7 @@ func main()  {
 ```
 Re-run the commands from the previous section to run the compiler and observe a new generated file out/test.foo.go Peeking inside the file, you’ll find the following:
 
-```golang
+```go
 package test
 
 func (x Message) Foo() string {

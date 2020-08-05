@@ -7,5 +7,5 @@ WEBSITE=www.bignumbers.io
 gatsby build
 gsutil mb gs://${WEBSITE}
 gsutil iam ch allUsers:objectViewer gs://${WEBSITE}
-gsutil cp -m -r ${DIR}/public/* gs://${WEBSITE}
+gsutil cp -r ${DIR}/public/* gs://${WEBSITE}
 gsutil web set -m index.html -e 404.html gs://${WEBSITE}
