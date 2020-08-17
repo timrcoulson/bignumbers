@@ -19,9 +19,9 @@ In a fresh directory, initialise a project with Go modules and the Protobuf libr
 go mod init github.com/[YOUR-ORG]/protoc-gen-foo
 go get google.golang.org/protobuf@v1.21.0
 ```
-N.B. The name of the module is important here. Your compiler name must be prefixed with protoc-gen- e.g. proto-gen-foo
+N.B. The name of the module is important here. Your compiler name must be prefixed with `protoc-gen-`` e.g. `proto-gen-foo`
 
-# The Plan
+## The Plan
 In this example, we want to extend the Protobuf compiler to add a method Foo() that returns bar for every message defined in our .proto file. Add the following to a new file test.proto as we’ll use this to verify our plugin works:
 
 ```go
@@ -37,9 +37,11 @@ message Message {
 ```
 
 ## Invoking the compiler plugin
-To start we’ll write a useless plugin that writes to stdout. Add the following to main.go : package main
+To start we’ll write a useless plugin that writes to stdout. Add the following to `main.go`:
 
 ```go
+package main
+
 import (
     "log"
 )
@@ -68,7 +70,7 @@ protoc \
     --go_out=./out
 N.B. protoc searches and invokes our plugin using the flag name foo_out
 
-If the above commands are successful, you should observe hello protoc being printed to the console and a generated protobuf file out/test.pb.go
+If the above commands are successful, you should observe hello protoc being printed to the console and a generated protobuf file `out/test.pb.go`
 ```
 ## Generating Code
 Replace our barebones plugin with the following code, paying attention to the explanation in comments: package main

@@ -1,0 +1,31 @@
+p {
+    font-size: 13px;
+}
+
+li {
+    font-size: 13px;
+}
+
+ul {
+    padding-left: 15px;
+    padding-top: 3px;
+    padding-bottom: 8px;
+    margin: 0;
+}
+
+h1 {
+    margin: 0
+}
+h2 {
+    margin: 0
+}
+h3 {
+    margin: 0;
+    color: #4c51bf;
+}
+small {
+    color: #1A202C;
+}
+h4 {
+    margin: 0
+}
