@@ -3,6 +3,7 @@ import "./resume.css"
 
 export default () => {
     return (
+        <div>
         <div className={"main"}>
             <div style={{display: "flex", width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
                 <span><h2>Tim Coulson</h2>
@@ -24,13 +25,14 @@ export default () => {
             <hr style={{marginBottom: "25px"}}/>
             <h3>Kitt <small>- Head of Engineering</small></h3>
             <p className={"date"}>OCTOBER 2018 - PRESENT</p>
-
             <ul>
                 <li>Founding member of Kitt; a PropTech business with £3.5m angel funding.</li>
                 <li>Delivered an ambitious platform of 40 micro-services, 15 web apps and a cross-platform mobile app.</li>
                 <li>Lead a happy and performant team of 4 developers and 1 product manager.</li>
-                <li>Novel features: facial recognition/app-based door entry, “virtual” receptionist, cloud printing.
+                <li>Stiched together a bleeding-edge microservice platform using cloud native technologies.</li>
+                <li>Novel features: facial recognition/app-based door entry, “virtual” receptionist, cloud printing, IAM.
                 </li>
+
             </ul>
             <h3>JustPark <small>- Senior Software Engineer</small></h3>
             <p className={"date"}>OCTOBER 2015 - OCTOBER 2018</p>
@@ -76,11 +78,12 @@ export default () => {
             </ul>
             <h3>Human</h3>
             <ul>
-                <li>I spend the majority of my time outside of work creating music under a pseudonym.</li>
-                <li>I value time with family & friends and a maintaining balanced lifestyle.</li>
+                <li>I spend the majority of my time outside of work writing, recording and producing music.</li>
+                <li>If not that, I can be found in an outdoor gym trying to do a handstand!</li>
                 <li>I thrive in informal environments and seek genuine friendship with colleagues.</li>
-                <li>Advised, bootstrapped or contributed to various early stage projects including Neumind and C-Me.</li>
+                <li>I value time with family & friends and a maintaining balanced lifestyle.</li>
             </ul>
+        </div>
         </div>
     )
 }
